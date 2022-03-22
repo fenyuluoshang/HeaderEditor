@@ -1,6 +1,6 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb",
+  "parser": "@typescript-eslint/parser",
+  "extends": ["airbnb", "airbnb-typescript"],
   "env": {
     "browser": true,
     "jest": true
@@ -28,6 +28,7 @@
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
-    }
+    },
+    "project": "./tsconfig.json"
   }
 }

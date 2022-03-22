@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import emitter from '@/share/core/emitter';
 import logger, { LogItem } from '@/share/core/logger';
 import { prefs } from '@/share/core/storage';

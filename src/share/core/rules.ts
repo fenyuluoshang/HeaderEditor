@@ -6,16 +6,19 @@ import { InitdRule, IS_MATCH, Rule, TABLE_NAMES, TABLE_NAMES_TYPE } from './var'
 const cache: { [key: string]: null | InitdRule[] } = {};
 TABLE_NAMES.forEach(t => (cache[t] = null));
 
-const updateCacheQueue: { [x: string]: Array<{ resolve: () => void; reject: (error: any) => void }> } = {};
+const updateCacheQueue: {
+  [x: string]: Array<{ resolve: () => void; reject: (error: any) => void }>;
+} = {};
+
 function updateCache(type: string) {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // 如果正在Update，则放到回调组里面
     if (typeof updateCacheQueue[type] !== 'undefined') {
       updateCacheQueue[type].push({ resolve, reject });
       return;
-    } else {
-      updateCacheQueue[type] = [{ resolve, reject }];
     }
+    updateCacheQueue[type] = [{ resolve, reject }];
+
     getDatabase()
       .then(db => {
         const tx = db.transaction([type], 'readonly');
@@ -26,7 +29,7 @@ function updateCache(type: string) {
           const cursor = event.target.result;
           if (cursor) {
             const s: InitdRule = cursor.value;
-            const isValidRule = true;
+            // const isValidRule = true;
             s.id = cursor.key;
             // Init function here
             try {
@@ -68,21 +71,15 @@ function filter(fromRules: InitdRule[], options: FilterOptions) {
   const id = typeof options.id !== 'undefined' ? Number(options.id) : null;
 
   if (id !== null) {
-    rules = rules.filter(rule => {
-      return rule.id === id;
-    });
+    rules = rules.filter(rule => rule.id === id);
   }
 
   if (options.name) {
-    rules = rules.filter(rule => {
-      return rule.name === options.name;
-    });
+    rules = rules.filter(rule => rule.name === options.name);
   }
 
   if (typeof options.enable !== 'undefined') {
-    rules = rules.filter(rule => {
-      return rule.enable === options.enable;
-    });
+    rules = rules.filter(rule => rule.enable === options.enable);
   }
 
   if (url != null) {
@@ -123,7 +120,7 @@ function save(o: Rule) {
       } else {
         // Create
         // Make sure it's not null - that makes indexeddb sad
-        delete rule.id;
+        delete (rule as any).id;
         const request = os.add(rule);
         request.onsuccess = event => {
           updateCache(tableName);
@@ -138,7 +135,7 @@ function save(o: Rule) {
 }
 
 function remove(tableName: TABLE_NAMES_TYPE, id: number) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     getDatabase().then(db => {
       const tx = db.transaction([tableName], 'readwrite');
       const os = tx.objectStore(tableName);
@@ -162,7 +159,7 @@ function get(type: TABLE_NAMES_TYPE, options?: FilterOptions) {
 
 function init() {
   setTimeout(() => {
-    const queue = [];
+    const queue: Array<Promise<void>> = [];
     if (cache.request === null) {
       queue.push(updateCache('request'));
     }

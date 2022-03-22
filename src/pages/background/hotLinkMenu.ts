@@ -26,7 +26,7 @@ export default function initHotLinkMenu() {
   }
 
   if (typeof browser.contextMenus !== 'undefined') {
-    browser.contextMenus.onClicked.addListener((info, tab) => {
+    browser.contextMenus.onClicked.addListener(info => {
       if (info.menuItemId === 'add-anti-hot-link') {
         openURL({
           url: `${browser.extension.getURL('options/options.html')}?action=add-anti-hot-link&url=${info.srcUrl}`,

@@ -5,7 +5,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { openURL } from './utils';
 
 export default function createApiHandler() {
-  browser.runtime.onMessage.addListener((request, sender) => {
+  browser.runtime.onMessage.addListener(request => {
     if (request.method === 'notifyBackground') {
       request.method = request.reason;
     }
@@ -34,9 +34,8 @@ export default function createApiHandler() {
             rules.updateCache('receiveHeader'),
             rules.updateCache('receiveBody'),
           ]);
-        } else {
-          return rules.updateCache(request.type);
         }
+        return rules.updateCache(request.type);
     }
   });
 }

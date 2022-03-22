@@ -97,6 +97,8 @@ export function getTableName(ruleType: RULE_TYPE): TABLE_NAMES_TYPE {
       return 'receiveHeader';
     case 'modifyReceiveBody':
       return 'receiveBody';
+    default:
+      return 'request';
   }
 }
 

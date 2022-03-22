@@ -3,7 +3,7 @@ import { canAccess, IS_ANDROID } from './utils';
 
 class Notify {
   tabs(request: any) {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       if (IS_ANDROID) {
         browser.tabs.query({}).then(tabs => {
           tabs.forEach((tab: Tabs.Tab) => {

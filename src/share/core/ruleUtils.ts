@@ -29,8 +29,11 @@ export function createExport(arr: { [key: string]: Array<Rule | InitdRule> }) {
 
 export function convertToRule(rule: InitdRule | Rule): Rule {
   const item = { ...rule };
+  // eslint-disable-next-line no-underscore-dangle
   delete item._reg;
+  // eslint-disable-next-line no-underscore-dangle
   delete item._func;
+  // eslint-disable-next-line no-underscore-dangle
   delete item._v_key;
   return item;
 }
@@ -51,6 +54,7 @@ export function fromJson(str: string) {
     if (list[e]) {
       list[e].map(ee => {
         // @ts-ignore
+        // eslint-disable-next-line no-param-reassign
         delete ee.id;
         return upgradeRuleFormat(ee);
       });

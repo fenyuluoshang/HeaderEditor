@@ -29,6 +29,6 @@
       "ice/*": [".ice/pages/*"]
     }
   },
-  "include": ["src", ".ice"],
-  "exclude": ["node_modules", "build", "public"]
+  "include": ["src", ".ice", "node_modules/@types/chrome"],
+  "exclude": ["build", "public"]
 }

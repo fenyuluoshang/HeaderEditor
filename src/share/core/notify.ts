@@ -31,6 +31,7 @@ class Notify {
       }
     });
   }
+
   background(request: any) {
     return browser.runtime.sendMessage({ ...request, method: 'notifyBackground', reason: request.method });
   }

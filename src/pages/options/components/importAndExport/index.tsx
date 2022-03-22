@@ -1,6 +1,6 @@
 import { Button, Card, Input, Message } from '@alifd/next';
-import { getExportName } from '@/pages/options/utils';
 import * as React from 'react';
+import { getExportName } from '@/pages/options/utils';
 import Icon from '@/share/components/icon';
 import Api from '@/share/core/api';
 import file from '@/share/core/file';
@@ -22,6 +22,7 @@ interface IEState {
 
 export default class ImportAndExport extends React.Component<IEProps, IEState> {
   private importRef: React.RefObject<ImportDrawer> = React.createRef();
+
   constructor(props: any) {
     super(props);
 

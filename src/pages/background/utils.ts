@@ -1,5 +1,5 @@
-import { getActiveTab } from '@/share/core/utils';
 import { browser } from 'webextension-polyfill-ts';
+import { getActiveTab } from '@/share/core/utils';
 
 interface OpenURLOptions {
   method?: string;

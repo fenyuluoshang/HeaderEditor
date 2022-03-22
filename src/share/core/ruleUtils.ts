@@ -67,12 +67,12 @@ export function upgradeRuleFormat(s: any) {
   if (typeof s.isFunction === 'undefined') {
     s.isFunction = false;
   } else {
-    s.isFunction = s.isFunction ? true : false;
+    s.isFunction = !!s.isFunction;
   }
   if (typeof s.enable === 'undefined') {
     s.enable = true;
   } else {
-    s.enable = s.enable ? true : false;
+    s.enable = !!s.enable;
   }
   if ((s.ruleType === 'modifySendHeader' || s.ruleType === 'modifyReceiveHeader') && !s.isFunction) {
     s.action.name = s.action.name.toLowerCase();
@@ -104,7 +104,6 @@ export function isMatchUrl(rule: InitdRule, url: string): IS_MATCH {
   }
   if (result) {
     return rule._exclude ? (rule._exclude.test(url) ? IS_MATCH.MATCH_BUT_EXCLUDE : IS_MATCH.MATCH) : IS_MATCH.MATCH;
-  } else {
-    return IS_MATCH.NOT_MATCH;
   }
+  return IS_MATCH.NOT_MATCH;
 }

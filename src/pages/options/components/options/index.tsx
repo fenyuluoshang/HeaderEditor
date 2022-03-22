@@ -1,8 +1,8 @@
 import { Card, Checkbox, Form, Grid } from '@alifd/next';
+import * as React from 'react';
 import { prefs } from '@/share/core/storage';
 import { t } from '@/share/core/utils';
 import { defaultPrefValue, PrefValue } from '@/share/core/var';
-import * as React from 'react';
 import './index.less';
 import Api from '@/share/core/api';
 import emitter from '@/share/core/emitter';
@@ -78,18 +78,16 @@ export default class Options extends React.Component<OptionsProps, OptionsState>
       <section className={`section-options ${this.props.visible ? 'visible' : 'in-visible'}`}>
         <Card showTitleBullet={false} contentHeight="auto" title={t('options')}>
           <Form>
-            <Row wrap={true}>
-              {Object.entries(mapPrefToProps).map(it => {
-                return (
-                  <Col span={24} m={12} key={it[0]}>
-                    <Checkbox
-                      onChange={this.handleChange.bind(this, it[0])}
-                      checked={this.state.prefs[it[0]]}
-                      label={it[1]}
-                    />
-                  </Col>
-                );
-              })}
+            <Row wrap>
+              {Object.entries(mapPrefToProps).map(it => (
+                <Col span={24} m={12} key={it[0]}>
+                  <Checkbox
+                    onChange={this.handleChange.bind(this, it[0])}
+                    checked={this.state.prefs[it[0]]}
+                    label={it[1]}
+                  />
+                </Col>
+              ))}
             </Row>
           </Form>
         </Card>

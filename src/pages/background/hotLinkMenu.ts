@@ -1,7 +1,7 @@
+import { browser } from 'webextension-polyfill-ts';
 import emitter from '@/share/core/emitter';
 import { prefs } from '@/share/core/storage';
 import { IS_ANDROID, t } from '@/share/core/utils';
-import { browser } from 'webextension-polyfill-ts';
 import { openURL } from './utils';
 
 let antiHotLinkMenu: string | number | null = null;

@@ -20,13 +20,9 @@ export const FIREFOX_VERSION = IS_FIREFOX
 export const IS_SUPPORT_STREAM_FILTER = typeof browser.webRequest.filterResponseData === 'function';
 
 // Get Active Tab
-export function getActiveTab(): Promise<Tabs.Tab> {
-  return new Promise(resolve => {
-    browser.tabs
-      .query({ currentWindow: true, active: true })
-      .then(tabs => tabs[0])
-      .then(resolve);
-  });
+export async function getActiveTab(): Promise<Tabs.Tab> {
+  const tabs = await browser.tabs.query({ currentWindow: true, active: true });
+  return tabs[0];
 }
 export function trimNewLines(s: string) {
   return s.replace(/^[\s\n]+/, '').replace(/[\s\n]+$/, '');
@@ -44,9 +40,9 @@ export function fetchUrl(param: FetchUrlParam): Promise<string> {
       method: param.post ? 'POST' : 'GET',
     };
     const headers: Record<string, string> = {};
-    let url = param.url;
+    let { url } = param;
     if (param.query) {
-      url += '?' + new URLSearchParams(param.query).toString();
+      url += `?${new URLSearchParams(param.query).toString()}`;
     }
     if (fetchParam.method === 'POST') {
       // 遍历一下，查找是否有File
@@ -73,9 +69,10 @@ export function fetchUrl(param: FetchUrlParam): Promise<string> {
       }
     }
     if (param.header) {
-      // tslint:disable-next-line
       for (const name in param.header) {
-        headers[name] = param.header[name];
+        if (Object.prototype.hasOwnProperty.call(param.header, name)) {
+          headers[name] = param.header[name];
+        }
       }
     }
     fetchParam.headers = headers;
@@ -138,6 +135,6 @@ export function getDomain(url: string) {
   if (url.indexOf('file:') === 0) {
     return '';
   }
-  const d = /.*?:\/*([^\/:]+)/.exec(url);
+  const d = /.*?:\/*([^\\/:]+)/.exec(url);
   return d ? d[1] : null;
 }

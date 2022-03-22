@@ -1,8 +1,8 @@
+import { browser } from 'webextension-polyfill-ts';
 import logger from '@/share/core/logger';
 import rules from '@/share/core/rules';
 import { getDatabase, prefs } from '@/share/core/storage';
 import { APIs } from '@/share/core/var';
-import { browser } from 'webextension-polyfill-ts';
 import { openURL } from './utils';
 
 export default function createApiHandler() {

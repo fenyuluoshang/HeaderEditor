@@ -1,8 +1,8 @@
 import { Balloon, Button, Card, Dialog, Loading, Switch, Table } from '@alifd/next';
 import classNames from 'classnames';
+import * as React from 'react';
 import { selectGroup } from '@/pages/options/lib/utils';
 import { getExportName } from '@/pages/options/utils';
-import * as React from 'react';
 import Icon from '@/share/components/icon';
 import Api from '@/share/core/api';
 import emitter from '@/share/core/emitter';
@@ -118,16 +118,14 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
           };
         }
       }
+    } else if (toGroup) {
+      toGroup.push(displayRule);
     } else {
-      if (toGroup) {
-        toGroup.push(displayRule);
-      } else {
-        // 插入一个新的Group
-        this.state.group[rule.group] = {
-          name: rule.group,
-          rules: [displayRule],
-        };
-      }
+      // 插入一个新的Group
+      this.state.group[rule.group] = {
+        name: rule.group,
+        rules: [displayRule],
+      };
     }
     this.forceUpdate();
   }
@@ -215,6 +213,7 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
       selectedKeys: [],
     });
   }
+
   getSelectedRules() {
     const { selectedKeys, group } = this.state;
     if (selectedKeys.length === 0) {
@@ -270,6 +269,7 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
     await Promise.all(table.map(tb => Api.updateCache(tb)));
     this.forceUpdate();
   }
+
   // 批量移动群组
   handleBatchMove() {
     selectGroup().then(newGroup => {
@@ -293,10 +293,12 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
       Promise.all(batch.map(item => Api.saveRule(item))).then(() => this.forceUpdate());
     });
   }
+
   // 批量分享
   handleBatchShare() {
     batchShare(this.getSelectedRules());
   }
+
   // 批量删除
   handleBatchDelete() {
     Dialog.confirm({
@@ -316,19 +318,20 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
   }
 
   handleGroupShare(name: string) {
-    const rules = this.state.group[name].rules;
+    const { rules } = this.state.group[name];
     const result: any = {};
     TABLE_NAMES.forEach(tb => (result[tb] = []));
     rules.forEach(e => result[getTableName(e.ruleType)].push(e));
     file.save(JSON.stringify(createExport(result), null, '\t'), getExportName());
   }
+
   handleGroupRename(name: string) {
     selectGroup(name).then(async newGroup => {
       if (name === newGroup) {
         return;
       }
       // 更新规则
-      const rules = this.state.group[name].rules;
+      const { rules } = this.state.group[name];
       for (const item of rules) {
         item.group = newGroup;
         await Api.saveRule(item);
@@ -354,11 +357,12 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
       this.setState({ group: newStateGroup });
     });
   }
+
   handleGroupDelete(name: string) {
     Dialog.confirm({
       content: t('delete_confirm'),
       onOk: async () => {
-        const rules = this.state.group[name].rules;
+        const { rules } = this.state.group[name];
         await Promise.all(rules.map(item => remove(item)));
         const newGroup = {
           ...this.state.group,
@@ -373,6 +377,7 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
       },
     });
   }
+
   handleCollapse(name: string) {
     const collapsed = [...this.state.collapsed];
     if (collapsed.includes(name)) {
@@ -451,7 +456,7 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
           })}
         >
           {this.state.isEnableSelect && (
-            <React.Fragment>
+            <>
               <Button className="button" size="large" title={t('select_all')} onClick={this.handleToggleSelectAll}>
                 <Icon type="done-all" />
               </Button>
@@ -467,7 +472,7 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
               <Button className="button" size="large" title={t('delete')} onClick={this.handleBatchDelete}>
                 <Icon type="delete" />
               </Button>
-            </React.Fragment>
+            </>
           )}
           <Button className="button" size="large" onClick={this.toggleSelect}>
             <Icon type="playlist-add-check" />
@@ -550,23 +555,19 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
                     alignHeader="left"
                     align="center"
                     dataIndex="enable"
-                    cell={(value: boolean, index: number, item: InitdRule) => {
-                      return (
-                        <Switch size="small" checked={value} onChange={this.handleToggleEnable.bind(this, item)} />
-                      );
-                    }}
+                    cell={(value: boolean, index: number, item: InitdRule) => (
+                      <Switch size="small" checked={value} onChange={this.handleToggleEnable.bind(this, item)} />
+                    )}
                   />
                   <Table.Column
                     className="cell-name"
                     title={t('name')}
                     dataIndex="name"
-                    cell={(value: string, index: number, item: InitdRule) => {
-                      return (
-                        <Balloon.Tooltip className="rule-tooltip" trigger={<div>{value}</div>}>
-                          <RuleDetail rule={item} />
-                        </Balloon.Tooltip>
-                      );
-                    }}
+                    cell={(value: string, index: number, item: InitdRule) => (
+                      <Balloon.Tooltip className="rule-tooltip" trigger={<div>{value}</div>}>
+                        <RuleDetail rule={item} />
+                      </Balloon.Tooltip>
+                    )}
                   />
                   <Table.Column
                     className="cell-type"
@@ -577,32 +578,30 @@ export default class Rules extends React.Component<RulesProps, RulesState> {
                   <Table.Column
                     className="cell-action"
                     title={t('action')}
-                    cell={(value: string, index: number, item: InitdRule) => {
-                      return (
-                        <div className="buttons">
-                          <Button type="secondary" onClick={this.handleChangeGroup.bind(this, item)}>
-                            <Icon type="playlist-add" />
-                            {t('group')}
-                          </Button>
-                          <Button type="secondary" onClick={() => this.props.onEdit(item)}>
-                            <Icon type="edit" />
-                            {t('edit')}
-                          </Button>
-                          <Button type="secondary" onClick={this.handleClone.bind(this, item)}>
-                            <Icon type="content-copy" />
-                            {t('clone')}
-                          </Button>
-                          <Button type="secondary" onClick={this.handlePreview.bind(this, item)}>
-                            <Icon type="search" />
-                            {t('view')}
-                          </Button>
-                          <Button type="secondary" onClick={this.handleDelete.bind(this, item)}>
-                            <Icon type="delete" />
-                            {t('delete')}
-                          </Button>
-                        </div>
-                      );
-                    }}
+                    cell={(value: string, index: number, item: InitdRule) => (
+                      <div className="buttons">
+                        <Button type="secondary" onClick={this.handleChangeGroup.bind(this, item)}>
+                          <Icon type="playlist-add" />
+                          {t('group')}
+                        </Button>
+                        <Button type="secondary" onClick={() => this.props.onEdit(item)}>
+                          <Icon type="edit" />
+                          {t('edit')}
+                        </Button>
+                        <Button type="secondary" onClick={this.handleClone.bind(this, item)}>
+                          <Icon type="content-copy" />
+                          {t('clone')}
+                        </Button>
+                        <Button type="secondary" onClick={this.handlePreview.bind(this, item)}>
+                          <Icon type="search" />
+                          {t('view')}
+                        </Button>
+                        <Button type="secondary" onClick={this.handleDelete.bind(this, item)}>
+                          <Icon type="delete" />
+                          {t('delete')}
+                        </Button>
+                      </div>
+                    )}
                   />
                 </Table>
               </Card>

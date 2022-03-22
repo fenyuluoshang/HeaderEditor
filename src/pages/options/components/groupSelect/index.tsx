@@ -12,7 +12,7 @@ interface GroupSelectState {
 }
 
 export default class GroupSelect extends React.Component<any, GroupSelectState> {
-  private newValue = '_new_' + Math.random().toString();
+  private newValue = `_new_${Math.random().toString()}`;
 
   constructor(props: any) {
     super(props);
@@ -43,6 +43,7 @@ export default class GroupSelect extends React.Component<any, GroupSelectState> 
       group,
     });
   }
+
   // 显示选择器
   handleEventShow(selected?: string) {
     this.setState({

@@ -1,11 +1,11 @@
+import { TextDecoder, TextEncoder } from 'text-encoding';
+import { browser, WebRequest } from 'webextension-polyfill-ts';
 import emitter from '@/share/core/emitter';
 import logger from '@/share/core/logger';
 import rules from '@/share/core/rules';
 import { prefs } from '@/share/core/storage';
 import { IS_CHROME, IS_SUPPORT_STREAM_FILTER } from '@/share/core/utils';
 import { Rule } from '@/share/core/var';
-import { TextDecoder, TextEncoder } from 'text-encoding';
-import { browser, WebRequest } from 'webextension-polyfill-ts';
 
 // 最大修改8MB的Body
 const MAX_BODY_SIZE = 8 * 1024 * 1024;
@@ -37,22 +37,32 @@ interface CustomFunctionDetail {
 }
 class RequestHandler {
   private _disableAll = false;
+
   private excludeHe = true;
+
   private includeHeaders = false;
+
   private modifyBody = false;
+
   private savedRequestHeader = new Map();
+
   private deleteHeaderTimer: number | null = null;
+
   private deleteHeaderQueue = new Map();
+
   private textDecoder: Map<string, TextDecoder> = new Map();
+
   private textEncoder: Map<string, TextEncoder> = new Map();
 
   constructor() {
     this.initHook();
     this.loadPrefs();
   }
+
   get disableAll() {
     return this._disableAll;
   }
+
   set disableAll(to) {
     if (this._disableAll === to) {
       return;
@@ -149,7 +159,8 @@ class RequestHandler {
     for (const item of rule) {
       if (item.action === 'cancel' && !item.isFunction) {
         return { cancel: true };
-      } else if (item.isFunction) {
+      }
+      if (item.isFunction) {
         try {
           const r = item._func(redirectTo, detail);
           if (typeof r === 'string') {
@@ -374,7 +385,7 @@ class RequestHandler {
       });
     }
     if (hasFunction) {
-      const detail = presetDetail ? presetDetail : this.makeDetails(request);
+      const detail = presetDetail || this.makeDetails(request);
       rule.forEach(item => {
         try {
           item._func(headers, detail);
@@ -432,7 +443,7 @@ class RequestHandler {
     let buffers: Uint8Array | null = null;
     // @ts-ignore
     filter.ondata = (event: WebRequest.StreamFilterEventData) => {
-      const data = event.data;
+      const { data } = event;
       if (buffers === null) {
         buffers = new Uint8Array(data);
         return;

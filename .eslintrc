@@ -1,11 +1,19 @@
 {
   "parser": "@typescript-eslint/parser",
-  "extends": ["airbnb", "airbnb-typescript"],
+  "extends": [
+    "airbnb", 
+    "airbnb-typescript"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "react"
+  ],
   "env": {
     "browser": true,
     "jest": true
   },
-  "rules": {
+  "rules": {    
+    "no-restricted-syntax": "off",
     "jsx-a11y/href-no-hash": [0],
     "jsx-a11y/click-events-have-key-events": [0],
     "jsx-a11y/anchor-is-valid": [ "error", {

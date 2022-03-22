@@ -12,7 +12,7 @@ interface FloatProps {
   onClose: () => void;
 }
 
-const Float = (props: FloatProps) => {
+function Float(props: FloatProps) {
   const { rule, onClose } = props;
 
   const handleStart = (re: any) => {
@@ -75,8 +75,8 @@ const Float = (props: FloatProps) => {
       });
     }
     function setNewOffset() {
-      box.style.top = offset.top + 'px';
-      box.style.left = offset.left + 'px';
+      box.style.top = `${offset.top}px`;
+      box.style.left = `${offset.left}px`;
       if (!end) {
         requestAnimationFrame(setNewOffset);
       }
@@ -102,6 +102,6 @@ const Float = (props: FloatProps) => {
       </Card.Content>
     </Card>
   );
-};
+}
 
 export default Float;

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
+import dayjs from 'dayjs';
+import clone from 'lodash.clonedeep';
 import emitter from '@/share/core/emitter';
 import logger, { LogItem } from '@/share/core/logger';
 import { prefs } from '@/share/core/storage';
-import dayjs from 'dayjs';
-import clone from 'lodash.clonedeep';
 
 function handleMessage(it: LogItem) {
   console.log(

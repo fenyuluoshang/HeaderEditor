@@ -1,6 +1,6 @@
 import { Button, Drawer, Message, Radio, Select, Table } from '@alifd/next';
-import { selectGroup } from '@/pages/options/lib/utils';
 import * as React from 'react';
+import { selectGroup } from '@/pages/options/lib/utils';
 import Api from '@/share/core/api';
 import emitter from '@/share/core/emitter';
 import { fromJson } from '@/share/core/ruleUtils';
@@ -76,7 +76,6 @@ export default class ImportDrawer extends React.Component<ImportDrawerProps, Imp
       });
     } catch (e) {
       console.error(e);
-      return;
     }
   }
 
@@ -184,7 +183,7 @@ export default class ImportDrawer extends React.Component<ImportDrawerProps, Imp
         <div className="save-to">
           <span>{t('save_to')}</span>
           <Radio.Group onChange={this.handleRecommendChange} value={this.state.useRecommend}>
-            <Radio value={true} label={t('suggested_group')} />
+            <Radio value label={t('suggested_group')} />
             <Radio value={false}>
               {this.state.group}{' '}
               <Button className="select-group" size="small" onClick={this.handleSelectAll}>

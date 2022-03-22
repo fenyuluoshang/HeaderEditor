@@ -14,6 +14,7 @@ class File {
       browser.downloads.download(option).then(resolve);
     });
   }
+
   load(formatToFilter: string): Promise<string> {
     return new Promise(resolve => {
       const fileInput = document.createElement('input');

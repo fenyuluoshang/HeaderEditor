@@ -43,7 +43,7 @@ class BrowserSync {
             rules[TABLE_NAMES[t]].push(toPut);
             one[TABLE_NAMES[t]].splice(one[TABLE_NAMES[t]].indexOf(toPut), 1);
           }
-          toSave['backup_' + index++] = one;
+          toSave[`backup_${index++}`] = one;
         }
         toSave.backup = {
           time: new Date().getTime(),
@@ -67,6 +67,7 @@ class BrowserSync {
       }
     });
   }
+
   getMeta(): Promise<SyncMeta> {
     return new Promise((resolve, reject) => {
       getSync()
@@ -77,19 +78,20 @@ class BrowserSync {
         .catch(reject);
     });
   }
+
   getContent(): Promise<{ [key: string]: TinyRule[] }> {
     return new Promise((resolve, reject) => {
       getSync()
         .get('backup')
         .then(e => {
-          const index = e.backup.index;
+          const { index } = e.backup;
           const result: { [key: string]: TinyRule[] } = {};
           TABLE_NAMES.forEach(it => {
             result[it] = [];
           });
           const toGet: string[] = [];
           for (let i = 0; i <= index; i++) {
-            toGet.push('backup_' + i);
+            toGet.push(`backup_${i}`);
           }
           getSync()
             .get(toGet)
@@ -105,6 +107,7 @@ class BrowserSync {
         .catch(reject);
     });
   }
+
   clear() {
     return new Promise((resolve, reject) => {
       const toRemove = ['backup'];
@@ -112,13 +115,13 @@ class BrowserSync {
         .get('backup')
         .then(e => {
           if (e.backup) {
-            const index = e.backup.index;
+            const { index } = e.backup;
             const result: { [key: string]: TinyRule[] } = {};
             TABLE_NAMES.forEach(it => {
               result[it] = [];
             });
             for (let i = 0; i <= index; i++) {
-              toRemove.push('backup_' + i);
+              toRemove.push(`backup_${i}`);
             }
           }
           getSync()

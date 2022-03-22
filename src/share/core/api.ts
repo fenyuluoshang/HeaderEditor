@@ -12,12 +12,14 @@ class BackgroundAPI {
       url,
     });
   }
+
   updateCache(type: 'request' | 'sendHeader' | 'receiveHeader' | 'receiveBody' | 'all') {
     return browser.runtime.sendMessage({
       method: APIs.UPDATE_CACHE,
       type,
     });
   }
+
   getRules(type: TABLE_NAMES_TYPE, options?: any) {
     return browser.runtime.sendMessage({
       method: APIs.GET_RULES,
@@ -25,6 +27,7 @@ class BackgroundAPI {
       options,
     });
   }
+
   getAllRules(): Promise<{ [x: string]: Rule[] }> {
     return Promise.all(TABLE_NAMES.map(k => this.getRules(k))).then(res => {
       const result: any = {};
@@ -34,12 +37,14 @@ class BackgroundAPI {
       return result;
     });
   }
+
   saveRule(rule: Rule | TinyRule) {
     return browser.runtime.sendMessage({
       method: APIs.SAVE_RULE,
       rule: isTinyRule(rule) ? rule : convertToRule(rule),
     });
   }
+
   removeRule(table: TABLE_NAMES_TYPE, id: number) {
     return browser.runtime.sendMessage({
       method: APIs.DELETE_RULE,
@@ -47,6 +52,7 @@ class BackgroundAPI {
       id,
     });
   }
+
   setPrefs(key: string, value: any) {
     return browser.runtime.sendMessage({
       method: APIs.SET_PREFS,

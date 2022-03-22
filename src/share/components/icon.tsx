@@ -4,6 +4,8 @@ interface IconProps {
   type: string;
 }
 
-const Icon = (props: IconProps) => <i className={`iconfont icon-${props.type}`} />;
+function Icon(props: IconProps) {
+  return <i className={`iconfont icon-${props.type}`} />;
+}
 
 export default Icon;

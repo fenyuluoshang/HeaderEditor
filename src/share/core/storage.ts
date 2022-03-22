@@ -50,9 +50,12 @@ export function getDatabase(): Promise<IDBDatabase> {
 
 class Prefs {
   private boundMethods: { [key: string]: (value: any) => any } = {};
+
   private boundWrappers: { [key: string]: any } = {};
+
   // when browser is strarting up, the setting is default
   private isDefault = true;
+
   private values: PrefValue;
 
   constructor() {
@@ -102,7 +105,7 @@ class Prefs {
       }
       const value = localStorage[key];
       delete localStorage[key];
-      localStorage['DEPRECATED: ' + key] = value;
+      localStorage[`DEPRECATED: ${key}`] = value;
       switch (typeof defaultPrefValue[key]) {
         case 'boolean':
           return value.toLowerCase() === 'true';
@@ -119,15 +122,15 @@ class Prefs {
       return value;
     }
   }
+
   get(key: string, defaultValue?: any) {
     if (key in this.boundMethods) {
       if (key in this.boundWrappers) {
         return this.boundWrappers[key];
-      } else {
-        if (key in this.values) {
-          this.boundWrappers[key] = this.boundMethods[key](this.values[key]);
-          return this.boundWrappers[key];
-        }
+      }
+      if (key in this.values) {
+        this.boundWrappers[key] = this.boundMethods[key](this.values[key]);
+        return this.boundWrappers[key];
       }
     }
     if (key in this.values) {
@@ -139,11 +142,13 @@ class Prefs {
     if (key in defaultPrefValue) {
       return defaultPrefValue[key];
     }
-    console.warn('No default preference for ' + key);
+    console.warn(`No default preference for ${key}`);
   }
+
   getAll() {
     return { ...this.values };
   }
+
   set(key: string, value: any, noSync: boolean = false) {
     const oldValue = this.values[key];
     if (!equal(value, oldValue)) {
@@ -156,12 +161,15 @@ class Prefs {
       }
     }
   }
+
   bindAPI(apiName: string, apiMethod: (value: any) => any) {
     this.boundMethods[apiName] = apiMethod;
   }
+
   remove(key: string) {
     this.set(key, undefined);
   }
+
   ready(cb: () => void) {
     if (!this.isDefault) {
       cb();

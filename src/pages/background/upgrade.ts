@@ -1,6 +1,6 @@
+import { browser } from 'webextension-polyfill-ts';
 import * as storage from '@/share/core/storage';
 import { TABLE_NAMES } from '@/share/core/var';
-import { browser } from 'webextension-polyfill-ts';
 
 // Upgrade
 const downloadHistory = localStorage.getItem('dl_history');

@@ -1,13 +1,13 @@
+import { Drawer, Form, Input, Message, Radio, Select } from '@alifd/next';
+import { highlight, languages } from 'prismjs';
+import * as React from 'react';
+import Editor from 'react-simple-code-editor';
 import Api from '@/share/core/api';
 import emitter from '@/share/core/emitter';
 import { initRule, isMatchUrl } from '@/share/core/ruleUtils';
 import { prefs } from '@/share/core/storage';
 import { IS_SUPPORT_STREAM_FILTER, t } from '@/share/core/utils';
 import { InitdRule, IS_MATCH, Rule, RULE_MATCH_TYPE, RULE_TYPE } from '@/share/core/var';
-import { Drawer, Form, Input, Message, Radio, Select } from '@alifd/next';
-import { highlight, languages } from 'prismjs';
-import * as React from 'react';
-import Editor from 'react-simple-code-editor';
 import ENCODING_LIST from './encoding';
 import COMMON_HEADERS from './headers';
 import './index.less';
@@ -75,6 +75,7 @@ function getRuleFromInput(input: Rule): Rule {
 
 export default class Edit extends React.Component<EditProps, EditState> {
   private initedRule?: InitdRule;
+
   constructor(props: any) {
     super(props);
 
@@ -290,7 +291,7 @@ export default class Edit extends React.Component<EditProps, EditState> {
           <Form.Item label={t('exec_type')}>
             <Radio.Group name="isFunction" disabled={this.state.rule.ruleType === 'modifyReceiveBody'}>
               <Radio value={false} label={t('exec_normal')} />
-              <Radio value={true} label={t('exec_function')} />
+              <Radio value label={t('exec_function')} />
             </Radio.Group>
           </Form.Item>
           {/* Redirect */}
